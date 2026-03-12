@@ -20,6 +20,8 @@ const ShopContextProvider = (props) => {
   const [orders, setOrders] = React.useState([]);
   const [products, setProducts] = React.useState([]);
   const [token, setToken] = useState('');
+  const [heroImageUrl, setHeroImageUrl] = React.useState('');
+  const [logoUrl, setLogoUrl] = React.useState('');
   const navigate = useNavigate();
 
   // Save cart to localStorage whenever it changes
@@ -171,8 +173,21 @@ const ShopContextProvider = (props) => {
     }
   }
 
+  const getPublicSettings = async () => {
+    try {
+      const response = await axios.get(backendUrl + '/api/settings/public');
+      if (response.data.success) {
+        setHeroImageUrl(response.data.settings?.heroImageUrl || '');
+        setLogoUrl(response.data.settings?.logoUrl || '');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(()=>{
     getProductsData();
+    getPublicSettings();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -218,6 +233,8 @@ const ShopContextProvider = (props) => {
     backendUrl,
     token,
     setToken,
+    heroImageUrl,
+    logoUrl,
     setCartItems,
     parseSizeAndColor,
   };

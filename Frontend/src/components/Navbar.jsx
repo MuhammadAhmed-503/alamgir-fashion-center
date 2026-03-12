@@ -19,7 +19,7 @@ const MoonIcon = () => (
 
 const Navbar = () => {
   const [visible, setVisible] = React.useState(false);
-  const {setShowSearch, getCartCount, navigate, token, setToken, setCartItems} = React.useContext(ShopContext);
+  const {setShowSearch, getCartCount, navigate, token, setToken, setCartItems, logoUrl} = React.useContext(ShopContext);
   const { isDarkMode, toggleTheme } = useTheme();
 
   const logout = () => {
@@ -33,9 +33,7 @@ const Navbar = () => {
     <>
       <div className={`flex items-center justify-between py-5 font-medium sticky top-0 z-50 backdrop-blur-md ${isDarkMode ? 'bg-slate-900/95' : 'bg-white/95'}`}>
         <Link to="/" className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-cyan-600 flex items-center justify-center">
-            <span className="text-white font-bold text-lg">F</span>
-          </div>
+          <img src={logoUrl || assets.logo} alt="Alamgir Fashion Center" className="w-10 h-10" />
           <span className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Alamgir Fashion Center</span>
         </Link>
         <ul className={`hidden sm:flex gap-6 text-sm ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>

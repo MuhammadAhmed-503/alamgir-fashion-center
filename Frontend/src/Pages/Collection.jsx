@@ -70,17 +70,15 @@ const Collection = () => {
     return productsCopy;
   }, [products, showSearch, search, category, subCategory, sortType,]);
 
-  const categories = [
-    { value: "Men", label: "Men" },
-    { value: "Women", label: "Women" },
-    { value: "Kids", label: "Kids" }
-  ];
+  const categories = useMemo(() => {
+    const values = Array.from(new Set((products || []).map((p) => p.category).filter(Boolean)));
+    return values.map((value) => ({ value, label: value }));
+  }, [products]);
 
-  const subCategories = [
-    { value: "Topwear", label: "Topwear" },
-    { value: "Bottomwear", label: "Bottomwear" },
-    { value: "Winterwear", label: "Winterwear" }
-  ];
+  const subCategories = useMemo(() => {
+    const values = Array.from(new Set((products || []).map((p) => p.subCategory).filter(Boolean)));
+    return values.map((value) => ({ value, label: value }));
+  }, [products]);
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 pt-10 overflow-hidden">

@@ -2,9 +2,11 @@ import React from "react";
 import { assets } from "../assets/assets";
 import { useTheme } from "../context/ThemeContext";
 import { Link } from "react-router-dom";
+import { ShopContext } from "../context/ShopContext";
 
 const Hero = () => {
   const { isDarkMode } = useTheme();
+  const { heroImageUrl } = React.useContext(ShopContext);
   
   return (
     <div className={`relative overflow-hidden rounded-3xl my-6 ${isDarkMode ? 'bg-gradient-to-br from-slate-800 via-slate-900 to-indigo-950' : 'bg-gradient-to-br from-indigo-50 via-white to-teal-50'}`}>
@@ -67,7 +69,7 @@ const Hero = () => {
           <div className="relative">
             <img 
               className="w-full h-[400px] lg:h-[600px] object-cover lg:rounded-l-[60px]" 
-              src={assets.hero_img} 
+              src={heroImageUrl || assets.hero_img} 
               alt="Hero" 
             />
             <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-teal-500/20 lg:rounded-l-[60px]"></div>

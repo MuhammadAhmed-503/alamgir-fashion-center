@@ -1,5 +1,5 @@
-import React from 'react'
 import { useTheme } from '../context/ThemeContext'
+import { assets } from '../assets/assets'
 
 // Theme Toggle Icons
 const SunIcon = () => (
@@ -14,24 +14,40 @@ const MoonIcon = () => (
   </svg>
 );
 
-const NavBar = ({setToken}) => {
+const MenuIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5" />
+  </svg>
+);
+
+const NavBar = ({ setToken, onMenuClick, logoUrl }) => {
   const { isDarkMode, toggleTheme } = useTheme();
 
   return (
     <div className={`flex items-center py-4 px-[4%] justify-between sticky top-0 z-50 backdrop-blur-md ${isDarkMode ? 'bg-slate-900/95' : 'bg-white/95'}`}>
       {/* Logo */}
-      <div className="flex items-center gap-2">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-teal-600 flex items-center justify-center">
-          <span className="text-white font-bold text-lg">F</span>
-        </div>
-        <div>
-          <span className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Alamgir Fashion Center</span>
-          <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${isDarkMode ? 'bg-indigo-500/20 text-indigo-400' : 'bg-indigo-100 text-indigo-600'}`}>Admin</span>
+      <div className="flex items-center gap-3 min-w-0">
+        <button
+          type="button"
+          onClick={onMenuClick}
+          className={`md:hidden p-2.5 rounded-xl transition-all duration-300 ${isDarkMode ? 'bg-slate-800 text-slate-200 hover:bg-slate-700' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+          aria-label="Open menu"
+        >
+          <MenuIcon />
+        </button>
+        <img src={logoUrl || assets.logo} alt="Alamgir Fashion Center" className="w-10 h-10" />
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className={`text-base sm:text-xl font-bold leading-tight whitespace-normal ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
+              Alamgir Fashion Center
+            </span>
+            <span className={`hidden md:inline-flex shrink-0 text-xs px-2 py-0.5 rounded-full ${isDarkMode ? 'bg-indigo-500/20 text-indigo-400' : 'bg-indigo-100 text-indigo-600'}`}>Admin</span>
+          </div>
         </div>
       </div>
 
       {/* Right Side */}
-      <div className="flex items-center gap-3">
+      <div className="hidden md:flex items-center gap-3">
         {/* Theme Toggle */}
         <button 
           onClick={toggleTheme}
@@ -44,7 +60,7 @@ const NavBar = ({setToken}) => {
         {/* Logout Button */}
         <button 
           onClick={()=>setToken('')} 
-          className='bg-gradient-to-r from-indigo-500 to-teal-600 hover:from-indigo-600 hover:to-teal-700 text-white px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 shadow-lg shadow-indigo-500/25'
+          className='bg-gradient-to-r from-indigo-500 to-teal-600 hover:from-indigo-600 hover:to-teal-700 text-white px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300 shadow-lg shadow-indigo-500/25'
         >
           Logout
         </button>

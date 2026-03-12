@@ -1,9 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
+import { assets } from '../assets/assets'
+import { ShopContext } from '../context/ShopContext'
 
 const Footer = () => {
   const { isDarkMode } = useTheme();
+  const { logoUrl } = React.useContext(ShopContext);
   
   return (
     <footer className={`mt-20 border-t ${isDarkMode ? 'border-slate-800' : 'border-slate-200'}`}>
@@ -12,9 +15,7 @@ const Footer = () => {
           {/* Brand Section */}
           <div className='lg:col-span-1'>
             <Link to="/" className="flex items-center gap-2 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-teal-600 flex items-center justify-center">
-                <span className="text-white font-bold text-lg">F</span>
-              </div>
+              <img src={logoUrl || assets.logo} alt="Alamgir Fashion Center" className="w-10 h-10" />
               <span className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Alamgir Fashion Center</span>
             </Link>
             <p className={`text-sm leading-relaxed ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>

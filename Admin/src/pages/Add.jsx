@@ -28,6 +28,7 @@ const Add = ({token}) => {
   const [subCategory, setSubCategory] = useState("Topwear")
   const [bestSeller, setBestSeller] = useState(false)
   const [sizes, setSizes] = useState([])
+  const [categoriesData, setCategoriesData] = useState([]);
   
   // Color management
   const [colors, setColors] = useState([]);
@@ -51,6 +52,32 @@ const Add = ({token}) => {
   ];
 
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const response = await axios.get(backendUrl + '/api/category/public');
+        if (response.data?.success) {
+          const items = response.data.categories || [];
+          setCategoriesData(items);
+          if (!isEditMode && items.length > 0) {
+            const exists = items.some((c) => c.name === category);
+            const firstCategoryName = items[0]?.name || "";
+            const nextCategory = exists ? category : firstCategoryName;
+            setCategory(nextCategory);
+            const subList =
+              items.find((c) => c.name === nextCategory)?.subCategories || [];
+            if (subList.length > 0) {
+              setSubCategory((prev) => (subList.includes(prev) ? prev : subList[0]));
+            }
+          }
+        }
+      } catch (error) {
+        void error;
+      }
+    };
+    loadCategories();
+  }, []);
 
   // Fetch product data when in edit mode
   useEffect(() => {
@@ -87,6 +114,9 @@ const Add = ({token}) => {
       setLoading(false);
     }
   };
+
+  const subCategoriesForSelected =
+    categoriesData.find((c) => c.name === category)?.subCategories || [];
 
   const addColor = () => {
     if (newColorName.trim()) {
@@ -277,12 +307,27 @@ const Add = ({token}) => {
               <label className={`block text-sm mb-2 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>Category</label>
               <select 
                 value={category} 
-                onChange={(e)=> setCategory(e.target.value)} 
+                onChange={(e)=> {
+                  const next = e.target.value;
+                  setCategory(next);
+                  const subs = categoriesData.find((c) => c.name === next)?.subCategories || [];
+                  if (subs.length > 0) setSubCategory(subs[0]);
+                }} 
                 className={`w-full px-4 py-3 rounded-xl border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-slate-50 border-slate-200'}`}
               >
-                <option value="Men">Men</option>
-                <option value="Women">Women</option>
-                <option value="Kids">Kids</option>
+                {categoriesData.length > 0 ? (
+                  categoriesData.map((c) => (
+                    <option key={c._id} value={c.name}>
+                      {c.name}
+                    </option>
+                  ))
+                ) : (
+                  <>
+                    <option value="Men">Men</option>
+                    <option value="Women">Women</option>
+                    <option value="Kids">Kids</option>
+                  </>
+                )}
               </select>
             </div>
 
@@ -293,9 +338,19 @@ const Add = ({token}) => {
                 onChange={(e)=> setSubCategory(e.target.value)} 
                 className={`w-full px-4 py-3 rounded-xl border ${isDarkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-slate-50 border-slate-200'}`}
               >
-                <option value="Topwear">Topwear</option>
-                <option value="Bottomwear">Bottomwear</option>
-                <option value="Winterwear">Winterwear</option>
+                {subCategoriesForSelected.length > 0 ? (
+                  subCategoriesForSelected.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))
+                ) : (
+                  <>
+                    <option value="Topwear">Topwear</option>
+                    <option value="Bottomwear">Bottomwear</option>
+                    <option value="Winterwear">Winterwear</option>
+                  </>
+                )}
               </select>
             </div>
 

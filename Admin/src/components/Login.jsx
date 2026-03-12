@@ -3,6 +3,7 @@ import axios from 'axios';
 import { backendUrl } from '../config'
 import { toast } from 'react-toastify';
 import { useTheme } from '../context/ThemeContext';
+import { assets } from '../assets/assets';
 
 // Theme Toggle Icons
 const SunIcon = () => (
@@ -17,7 +18,7 @@ const MoonIcon = () => (
   </svg>
 );
 
-const Login = ({setToken}) => {
+const Login = ({ setToken, logoUrl }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -59,9 +60,7 @@ const Login = ({setToken}) => {
       <div className={`w-full max-w-md p-8 rounded-3xl shadow-2xl transition-all duration-300 ${isDarkMode ? 'bg-slate-800 shadow-slate-900/50' : 'bg-white shadow-slate-200/50'}`}>
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-teal-600 flex items-center justify-center mb-4 shadow-lg shadow-indigo-500/30">
-            <span className="text-white font-bold text-2xl">F</span>
-          </div>
+          <img src={logoUrl || assets.logo} alt="Alamgir Fashion Center" className="w-16 h-16 mb-4" />
           <h1 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Admin Panel</h1>
           <p className={`text-sm mt-1 ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>Sign in to manage your store</p>
         </div>

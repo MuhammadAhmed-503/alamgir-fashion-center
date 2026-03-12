@@ -11,6 +11,8 @@ import cartRouter from './routes/cartRoute.js';
 import orderRouter from './routes/orderRoute.js';
 import authRouter from './routes/authRoute.js';
 import reviewRouter from './routes/reviewRoute.js';
+import settingsRouter from './routes/settingsRoute.js';
+import categoryRouter from './routes/categoryRoute.js';
 
 // connect to cloudinary
 connectCloudinary();
@@ -48,6 +50,8 @@ app.use('/api/cart', cartRouter);
 app.use('/api/order', orderRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/review', reviewRouter);
+app.use('/api/settings', settingsRouter);
+app.use('/api/category', categoryRouter);
 
 // test endpoint
 app.get('/', (req, res) => {
