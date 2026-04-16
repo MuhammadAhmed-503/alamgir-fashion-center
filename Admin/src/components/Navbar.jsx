@@ -38,7 +38,7 @@ const NavBar = ({ setToken, onMenuClick, logoUrl }) => {
         <img src={logoUrl || assets.logo} alt="Alamgir Fashion Center" className="w-10 h-10" />
         <div className="min-w-0">
           <div className="flex items-center gap-2 min-w-0">
-            <span className={`text-base sm:text-xl font-bold leading-tight whitespace-normal ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
+            <span className={`text-xs sm:text-base md:text-xl font-bold leading-tight whitespace-normal ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
               Alamgir Fashion Center
             </span>
             <span className={`hidden md:inline-flex shrink-0 text-xs px-2 py-0.5 rounded-full ${isDarkMode ? 'bg-indigo-500/20 text-indigo-400' : 'bg-indigo-100 text-indigo-600'}`}>Admin</span>

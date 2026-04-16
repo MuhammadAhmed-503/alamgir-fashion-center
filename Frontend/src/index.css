@@ -2,6 +2,10 @@
 
 @import "tailwindcss";
 
+body {
+  overflow-x: hidden;
+}
+
 /* Custom CSS Variables for Theme */
 :root {
   /* Light Mode Colors - Changed to Blue/Teal from Purple */

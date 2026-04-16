@@ -34,7 +34,7 @@ const Navbar = () => {
       <div className={`flex items-center justify-between py-5 font-medium sticky top-0 z-50 backdrop-blur-md ${isDarkMode ? 'bg-slate-900/95' : 'bg-white/95'}`}>
         <Link to="/" className="flex items-center gap-2">
           <img src={logoUrl || assets.logo} alt="Alamgir Fashion Center" className="w-10 h-10" />
-          <span className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Alamgir Fashion Center</span>
+          <span className={`text-sm sm:text-xl font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Alamgir Fashion Center</span>
         </Link>
         <ul className={`hidden sm:flex gap-6 text-sm ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>
           <NavLink to="/" className={({ isActive }) => `flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-all duration-300 hover:${isDarkMode ? 'bg-slate-800' : 'bg-slate-100'} ${isActive ? (isDarkMode ? 'text-sky-400 bg-slate-800' : 'text-sky-600 bg-sky-50') : ''}`}>
@@ -57,7 +57,7 @@ const Navbar = () => {
           {/* Theme Toggle */}
           <button 
             onClick={toggleTheme}
-            className={`p-2 rounded-full transition-all duration-300 ${isDarkMode ? 'bg-slate-800 text-yellow-400 hover:bg-slate-700' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+            className={`hidden sm:block p-2 rounded-full transition-all duration-300 ${isDarkMode ? 'bg-slate-800 text-yellow-400 hover:bg-slate-700' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
             aria-label="Toggle theme"
           >
             {isDarkMode ? <SunIcon /> : <MoonIcon />}
@@ -74,7 +74,7 @@ const Navbar = () => {
           </button>
           
           {/* Profile Dropdown */}
-          <div className="group relative">
+          <div className="hidden sm:block group relative">
             <button 
               onClick={()=> token ? null : navigate('/login')}
               className={`p-2 rounded-full transition-all duration-300 ${isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'}`}
@@ -118,55 +118,121 @@ const Navbar = () => {
         </div>
         
         {/* Mobile Menu */}
+        {visible && (
+          <div className="fixed inset-0 z-40 sm:hidden" onClick={() => setVisible(false)}>
+            <div className={`absolute inset-0 bg-black/50 backdrop-blur-sm`}></div>
+          </div>
+        )}
+        
         <div
-          className={`fixed inset-0 z-50 transition-all duration-300 ${
-            visible ? "opacity-100 visible" : "opacity-0 invisible"
-          }`}
+          className={`fixed top-0 right-0 h-screen w-72 z-50 transition-all duration-300 ${isDarkMode ? 'bg-slate-900' : 'bg-white'} shadow-2xl sm:hidden overflow-y-auto ${!visible ? 'pointer-events-none invisible' : 'visible'}`}
+          style={{ transform: visible ? 'translateX(0)' : 'translateX(100%)' }}
         >
-          <div className={`absolute inset-0 bg-black/50 backdrop-blur-sm`} onClick={() => setVisible(false)}></div>
-          <div className={`absolute top-0 right-0 h-full w-72 ${isDarkMode ? 'bg-slate-900' : 'bg-white'} shadow-2xl transition-transform duration-300 ${visible ? 'translate-x-0' : 'translate-x-full'}`}>
-            <div className="flex flex-col h-full">
-              <div className={`flex items-center justify-between p-4 border-b ${isDarkMode ? 'border-slate-800' : 'border-slate-200'}`}>
-                <span className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Menu</span>
+          <div className="flex flex-col h-full">
+            {/* Menu Header */}
+            <div className={`flex items-center justify-between px-5 py-4 border-b ${isDarkMode ? 'border-slate-800' : 'border-slate-200'}`}>
+              <span className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Menu</span>
+              <button
+                onClick={() => setVisible(false)}
+                className={`p-2 rounded-full transition-all ${isDarkMode ? 'hover:bg-slate-800 text-slate-300' : 'hover:bg-slate-100 text-slate-600'}`}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            {/* Navigation Links */}
+            <div className="flex flex-col px-3 py-4 gap-1">
+              <NavLink
+                onClick={() => setVisible(false)}
+                className={({ isActive }) => `px-4 py-3 rounded-lg font-semibold transition-all ${isActive ? 'bg-gradient-to-r from-sky-500 to-cyan-600 text-white shadow-lg' : (isDarkMode ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-100')}`}
+                to="/"
+              >
+                HOME
+              </NavLink>
+              <NavLink
+                onClick={() => setVisible(false)}
+                className={({ isActive }) => `px-4 py-3 rounded-lg font-semibold transition-all ${isActive ? 'bg-gradient-to-r from-sky-500 to-cyan-600 text-white shadow-lg' : (isDarkMode ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-100')}`}
+                to="/collection"
+              >
+                COLLECTION
+              </NavLink>
+              <NavLink
+                onClick={() => setVisible(false)}
+                className={({ isActive }) => `px-4 py-3 rounded-lg font-semibold transition-all ${isActive ? 'bg-gradient-to-r from-sky-500 to-cyan-600 text-white shadow-lg' : (isDarkMode ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-100')}`}
+                to="/about"
+              >
+                ABOUT
+              </NavLink>
+              <NavLink
+                onClick={() => setVisible(false)}
+                className={({ isActive }) => `px-4 py-3 rounded-lg font-semibold transition-all ${isActive ? 'bg-gradient-to-r from-sky-500 to-cyan-600 text-white shadow-lg' : (isDarkMode ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-100')}`}
+                to="/contact"
+              >
+                CONTACT
+              </NavLink>
+            </div>
+            
+            {/* Divider */}
+            <div className={`mx-3 ${isDarkMode ? 'border-slate-800' : 'border-slate-200'} border-t`}></div>
+            
+            {/* Theme & Profile Section */}
+            <div className="flex flex-col px-3 py-4 gap-1">
+              {/* Mobile Menu Theme Toggle */}
+              <button 
+                onClick={() => {
+                  toggleTheme();
+                }}
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg font-semibold transition-all ${isDarkMode ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-100'}`}
+                aria-label="Toggle theme"
+              >
+                {isDarkMode ? <SunIcon /> : <MoonIcon />}
+                <span>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>
+              </button>
+              
+              {/* Mobile Menu Profile or Login */}
+              {token ? (
+                <>
+                  <button
+                    onClick={() => {
+                      navigate('/profile');
+                      setVisible(false);
+                    }}
+                    className={`px-4 py-3 rounded-lg font-semibold transition-all text-left ${isDarkMode ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-100'}`}
+                  >
+                    My Profile
+                  </button>
+                  <button
+                    onClick={() => {
+                      navigate('/orders');
+                      setVisible(false);
+                    }}
+                    className={`px-4 py-3 rounded-lg font-semibold transition-all text-left ${isDarkMode ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-100'}`}
+                  >
+                    Orders
+                  </button>
+                  <button 
+                    onClick={() => {
+                      logout();
+                      setVisible(false);
+                    }} 
+                    className={`px-4 py-3 rounded-lg font-semibold transition-all text-left text-red-500 ${isDarkMode ? 'hover:bg-red-900/30' : 'hover:bg-red-50'}`}
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
                 <button
-                  onClick={() => setVisible(false)}
-                  className={`p-2 rounded-full ${isDarkMode ? 'hover:bg-slate-800 text-slate-300' : 'hover:bg-slate-100 text-slate-600'}`}
+                  onClick={() => {
+                    navigate('/login');
+                    setVisible(false);
+                  }}
+                  className={`px-4 py-3 rounded-lg font-semibold transition-all text-left ${isDarkMode ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-100'}`}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
+                  Login
                 </button>
-              </div>
-              <div className="flex flex-col p-4 gap-2">
-                <NavLink
-                  onClick={() => setVisible(false)}
-                  className={({ isActive }) => `px-4 py-3 rounded-xl font-medium transition-all ${isActive ? 'bg-gradient-to-r from-sky-500 to-cyan-600 text-white' : (isDarkMode ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-600 hover:bg-slate-100')}`}
-                  to="/"
-                >
-                  HOME
-                </NavLink>
-                <NavLink
-                  onClick={() => setVisible(false)}
-                  className={({ isActive }) => `px-4 py-3 rounded-xl font-medium transition-all ${isActive ? 'bg-gradient-to-r from-sky-500 to-cyan-600 text-white' : (isDarkMode ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-600 hover:bg-slate-100')}`}
-                  to="/collection"
-                >
-                  COLLECTION
-                </NavLink>
-                <NavLink
-                  onClick={() => setVisible(false)}
-                  className={({ isActive }) => `px-4 py-3 rounded-xl font-medium transition-all ${isActive ? 'bg-gradient-to-r from-sky-500 to-cyan-600 text-white' : (isDarkMode ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-600 hover:bg-slate-100')}`}
-                  to="/about"
-                >
-                  ABOUT
-                </NavLink>
-                <NavLink
-                  onClick={() => setVisible(false)}
-                  className={({ isActive }) => `px-4 py-3 rounded-xl font-medium transition-all ${isActive ? 'bg-gradient-to-r from-sky-500 to-cyan-600 text-white' : (isDarkMode ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-600 hover:bg-slate-100')}`}
-                  to="/contact"
-                >
-                  CONTACT
-                </NavLink>
-              </div>
+              )}
             </div>
           </div>
         </div>
