@@ -30,7 +30,25 @@ const App = () => {
   const [adminToken, setAdminToken] = useState(localStorage.getItem('adminToken') || '');
 
   useEffect(() => {
-    localStorage.setItem('adminToken', adminToken);
+    const syncAdminToken = () => {
+      const storedAdminToken = localStorage.getItem('adminToken') || '';
+      setAdminToken((prevToken) => (prevToken === storedAdminToken ? prevToken : storedAdminToken));
+    };
+
+    syncAdminToken();
+    window.addEventListener('storage', syncAdminToken);
+
+    return () => {
+      window.removeEventListener('storage', syncAdminToken);
+    };
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (adminToken) {
+      localStorage.setItem('adminToken', adminToken);
+    } else {
+      localStorage.removeItem('adminToken');
+    }
   }, [adminToken]);
 
   const handleAdminLogout = () => {
