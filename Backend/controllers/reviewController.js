@@ -6,12 +6,21 @@ const addReview = async (req, res) => {
     try {
         const { productId, rating, comment } = req.body;
         const userId = req.userId || req.body?.userId;
+        const normalizedRating = Number(rating);
 
-        if (!rating || !comment) {
+        if (!userId) {
+            return res.json({ success: false, message: 'User not authorized' });
+        }
+
+        if (!productId) {
+            return res.json({ success: false, message: 'Product is required' });
+        }
+
+        if (!normalizedRating || !comment?.trim()) {
             return res.json({ success: false, message: "Rating and comment are required" });
         }
 
-        if (rating < 1 || rating > 5) {
+        if (normalizedRating < 1 || normalizedRating > 5) {
             return res.json({ success: false, message: "Rating must be between 1 and 5" });
         }
 
@@ -22,25 +31,30 @@ const addReview = async (req, res) => {
         }
 
         const user = await userModel.findById(userId).select('name');
-        const resolvedUserName = user?.name || req.body?.userName || 'Anonymous User';
+        const resolvedUserName = (
+            user?.name ||
+            req.body?.userName ||
+            'Anonymous User'
+        ).toString().trim() || 'Anonymous User';
 
         // Check if user already reviewed this product
         const existingReview = product.reviews.find(
-            review => review.user.toString() === userId
+            review => review.user?.toString() === userId
         );
 
         if (existingReview) {
             // Update existing review
-            existingReview.rating = rating;
-            existingReview.comment = comment;
+            existingReview.rating = normalizedRating;
+            existingReview.comment = comment.trim();
+            existingReview.userName = existingReview.userName || resolvedUserName;
             existingReview.date = Date.now();
         } else {
             // Add new review
             product.reviews.push({
                 user: userId,
                 userName: resolvedUserName,
-                rating: rating,
-                comment: comment
+                rating: normalizedRating,
+                comment: comment.trim()
             });
         }
 

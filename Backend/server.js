@@ -25,17 +25,27 @@ const app = express();
 // eslint-disable-next-line no-undef
 const PORT = process.env.PORT || 5000;
 
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://localhost:5175',
+    'http://localhost:5176',
+    process.env.FRONTEND_URL,
+    process.env.ADMIN_URL,
+    ...(process.env.FRONTEND_URLS ? process.env.FRONTEND_URLS.split(',') : [])
+].filter(Boolean);
+
 
 // middlewares
 app.use(cors({
-    origin: [
-        'http://localhost:5173',
-        'http://localhost:5174',
-        'http://localhost:5175',
-        'http://localhost:5176',
-        process.env.FRONTEND_URL,
-        process.env.ADMIN_URL
-    ].filter(Boolean),
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+            return;
+        }
+
+        callback(new Error('CORS policy blocked this origin'));
+    },
     credentials: true
 }));
 app.use(express.json());
@@ -55,12 +65,16 @@ app.use('/api/category', categoryRouter);
 
 // test endpoint
 app.get('/', (req, res) => {
-    res.status(200).send('Marhaba!');
+    res.status(200).json({ success: true, message: 'Backend is live' });
 });
 
-// start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-    console.log(`Admin login endpoint: http://localhost:${PORT}/api/user/admin`);
-    console.log(`Product endpoints: http://localhost:${PORT}/api/product/*`);
-});
+// Local development listener only. Vercel invokes the exported app as a serverless function.
+if (!process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`Server is running on http://localhost:${PORT}`);
+        console.log(`Admin login endpoint: http://localhost:${PORT}/api/user/admin`);
+        console.log(`Product endpoints: http://localhost:${PORT}/api/product/*`);
+    });
+}
+
+export default app;
