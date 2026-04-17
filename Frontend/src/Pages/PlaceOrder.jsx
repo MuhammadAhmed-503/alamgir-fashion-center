@@ -1,12 +1,21 @@
 import React, { useContext, useState, useEffect } from 'react'
 import Title from '../components/Title'
 import CartTotal from '../components/CartTotal'
-import { assets } from '../assets/assets'
 import { ShopContext } from '../context/ShopContext'
 import { useTheme } from '../context/ThemeContext'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import axios from 'axios'
+
+const pakistanStates = [
+  'Punjab',
+  'Sindh',
+  'Khyber Pakhtunkhwa',
+  'Balochistan',
+  'Islamabad Capital Territory',
+  'Gilgit-Baltistan',
+  'Azad Jammu and Kashmir'
+]
 
 const PlaceOrder = () => {
   const [method, setMethod] = useState('cod')
@@ -25,9 +34,9 @@ const PlaceOrder = () => {
     email: '',
     street: '',
     city: '',
-    state: '',
+    state: 'Punjab',
     zipcode: '',
-    country: '',
+    country: 'Pakistan',
     phone: '',
   })
 
@@ -110,6 +119,19 @@ const PlaceOrder = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(formData.email)) {
       toast.error('Please enter a valid email address')
+      return
+    }
+
+    const pakistanPostalCodeRegex = /^\d{5}$/
+    if (!pakistanPostalCodeRegex.test(formData.zipcode.trim())) {
+      toast.error('Please enter a valid Pakistani postal code (5 digits)')
+      return
+    }
+
+    const pakistanPhoneRegex = /^(\+92|0)3\d{9}$/
+    const normalizedPhone = formData.phone.replace(/[\s-]/g, '')
+    if (!pakistanPhoneRegex.test(normalizedPhone)) {
+      toast.error('Please enter a valid Pakistani mobile number (e.g. +923001234567 or 03001234567)')
       return
     }
 
@@ -217,29 +239,31 @@ const PlaceOrder = () => {
                   value={formData.city}
                   className={inputClasses}
                   type="text" 
-                  placeholder='New York' 
+                  placeholder='Lahore' 
                 />
               </div>
               <div>
                 <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
-                  State
+                  Province / Territory
                 </label>
-                <input 
+                <select
                   required
                   onChange={onChangeHandler}
                   name='state'
                   value={formData.state}
                   className={inputClasses}
-                  type="text" 
-                  placeholder='NY' 
-                />
+                >
+                  {pakistanStates.map((stateName) => (
+                    <option key={stateName} value={stateName}>{stateName}</option>
+                  ))}
+                </select>
               </div>
             </div>
             
             <div className='grid sm:grid-cols-2 gap-4'>
               <div>
                 <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
-                  Zip Code
+                  Postal Code
                 </label>
                 <input 
                   required
@@ -247,8 +271,11 @@ const PlaceOrder = () => {
                   name='zipcode'
                   value={formData.zipcode}
                   className={inputClasses}
-                  type="number" 
-                  placeholder='10001' 
+                  type="text"
+                  inputMode="numeric"
+                  pattern="\d{5}"
+                  maxLength={5}
+                  placeholder='54000' 
                 />
               </div>
               <div>
@@ -262,7 +289,8 @@ const PlaceOrder = () => {
                   value={formData.country}
                   className={inputClasses}
                   type="text" 
-                  placeholder='United States' 
+                  placeholder='Pakistan'
+                  readOnly
                 />
               </div>
             </div>
@@ -278,7 +306,7 @@ const PlaceOrder = () => {
                 value={formData.phone}
                 className={inputClasses}
                 type="tel" 
-                placeholder='+1 (555) 000-0000' 
+                placeholder='+923001234567' 
               />
             </div>
           </div>

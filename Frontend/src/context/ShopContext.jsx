@@ -8,8 +8,8 @@ import { toast } from "react-toastify";
 // eslint-disable-next-line react-refresh/only-export-components
 export const ShopContext = createContext();
 const ShopContextProvider = (props) => {
-  const currency = "$";
-  const delivery_fee = 10;
+  const currency = "PKR ";
+  const delivery_fee = 250;
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [search, setSearch] = React.useState("");
   const [showSearch, setShowSearch] = React.useState(false);
