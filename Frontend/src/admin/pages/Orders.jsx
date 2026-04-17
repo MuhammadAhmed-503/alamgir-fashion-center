@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { backendUrl, currency } from '../config'
 import { toast } from 'react-toastify'
-import { useTheme } from '../context/ThemeContext'
+import { useTheme } from '../../context/ThemeContext'
 
 // Parcel Icon SVG Component
 const ParcelIcon = ({ className }) => (

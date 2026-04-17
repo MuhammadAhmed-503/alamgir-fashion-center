@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { assets } from '../assets/assets';
+import { assets } from '../../assets/assets';
 import axios from 'axios';
 import { backendUrl } from '../config'
 import { toast } from 'react-toastify';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 
 const Add = ({token}) => {
   const { isDarkMode } = useTheme();
@@ -104,7 +104,7 @@ const Add = ({token}) => {
           setExistingImages(product.image || []);
         } else {
           toast.error('Product not found');
-          navigate('/list');
+          navigate('/admin/products');
         }
       }
     } catch (error) {
@@ -178,7 +178,7 @@ const Add = ({token}) => {
       if(response.data.success){
         toast.success(response.data.message)
         if (isEditMode) {
-          navigate('/list');
+          navigate('/admin/products');
         } else {
           // Reset form for add mode
           setName('')
@@ -234,7 +234,7 @@ const Add = ({token}) => {
         {isEditMode && (
           <button 
             type="button" 
-            onClick={() => navigate('/list')}
+            onClick={() => navigate('/admin/products')}
             className={`text-sm ${isDarkMode ? 'text-slate-400 hover:text-slate-200' : 'text-gray-500 hover:text-gray-700'}`}
           >
             ← Back to List
@@ -531,7 +531,7 @@ const Add = ({token}) => {
         {isEditMode && (
           <button 
             type='button'
-            onClick={() => navigate('/list')}
+            onClick={() => navigate('/admin/products')}
             className={`px-8 py-3.5 rounded-xl font-semibold transition-all ${isDarkMode ? 'bg-slate-700 text-slate-300 hover:bg-slate-600' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'}`}
           >
             Cancel

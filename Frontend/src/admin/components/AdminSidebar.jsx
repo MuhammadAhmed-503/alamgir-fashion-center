@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import { useTheme } from '../context/ThemeContext'
+import { useTheme } from '../../context/ThemeContext'
 
 // Icons
 const AddIcon = () => (
@@ -108,7 +108,7 @@ const Sidebar = ({ isOpen, onClose, onLogout }) => {
         
         <NavLink 
           className={({isActive}) => getLinkStyle(isActive)} 
-          to='/add'
+          to='/admin/add'
           onClick={onClose}
         >
           <AddIcon />
@@ -117,7 +117,7 @@ const Sidebar = ({ isOpen, onClose, onLogout }) => {
         
         <NavLink 
           className={({isActive}) => getLinkStyle(isActive)} 
-          to='/list'
+          to='/admin/products'
           onClick={onClose}
         >
           <ListIcon />
@@ -126,7 +126,7 @@ const Sidebar = ({ isOpen, onClose, onLogout }) => {
         
         <NavLink 
           className={({isActive}) => getLinkStyle(isActive)} 
-          to='/orders'
+          to='/admin/orders'
           onClick={onClose}
         >
           <OrderIcon />
@@ -135,7 +135,7 @@ const Sidebar = ({ isOpen, onClose, onLogout }) => {
 
         <NavLink
           className={({ isActive }) => getLinkStyle(isActive)}
-          to="/settings"
+          to="/admin/settings"
           onClick={onClose}
         >
           <SettingsIcon />

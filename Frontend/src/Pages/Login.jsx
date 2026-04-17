@@ -9,7 +9,7 @@ import { useLocation, useSearchParams } from 'react-router-dom';
 const Login = () => {
   const [currentState, setCurrentState] = useState('Login');
   const [authMethod, setAuthMethod] = useState('email'); // 'email' or 'phone'
-  const {token, setToken, navigate, backendUrl, cartItems, setCartItems} = useContext(ShopContext);
+  const {token, setToken, navigate, backendUrl} = useContext(ShopContext);
   const { isDarkMode } = useTheme();
   const location = useLocation();
   const [searchParams] = useSearchParams();
@@ -114,6 +114,8 @@ const Login = () => {
       if (response.data.success) {
         setToken(response.data.token);
         localStorage.setItem('token', response.data.token);
+        localStorage.removeItem('adminToken');
+        localStorage.setItem('authRole', 'user');
         await syncCartToServer(response.data.token);
         toast.success('Verified successfully!');
       } else {
@@ -137,13 +139,31 @@ const Login = () => {
         if (response.data.success) {
           setToken(response.data.token);
           localStorage.setItem('token', response.data.token);
+          localStorage.removeItem('adminToken');
+          localStorage.setItem('authRole', 'user');
           await syncCartToServer(response.data.token);
           toast.success('Account created successfully!');
         } else {
           toast.error(response.data.message);
         }
       } else {
-        // Login logic
+        // Try admin authentication first, then fallback to customer authentication.
+        const adminResponse = await axios.post(backendUrl + '/api/user/admin', {
+          email,
+          password
+        });
+
+        if (adminResponse.data.success) {
+          localStorage.setItem('adminToken', adminResponse.data.token);
+          localStorage.setItem('authRole', 'admin');
+          localStorage.removeItem('token');
+          setToken('');
+          toast.success('Welcome back, Admin!');
+          navigate('/admin/orders');
+          return;
+        }
+
+        // Customer login fallback
         const response = await axios.post(backendUrl + '/api/user/login', {
           email,
           password
@@ -152,6 +172,8 @@ const Login = () => {
         if (response.data.success) {
           setToken(response.data.token);
           localStorage.setItem('token', response.data.token);
+          localStorage.removeItem('adminToken');
+          localStorage.setItem('authRole', 'user');
           await syncCartToServer(response.data.token);
           toast.success('Logged in successfully!');
         } else {
@@ -185,6 +207,13 @@ const Login = () => {
     }
   }, [token, navigate, location]);
 
+  useEffect(() => {
+    const adminToken = localStorage.getItem('adminToken');
+    if (adminToken) {
+      navigate('/admin/orders');
+    }
+  }, [navigate]);
+
   return (
     <div className="min-h-[70vh] flex items-center justify-center py-12 px-4">
       <div className={`w-full max-w-md p-8 rounded-3xl ${isDarkMode ? 'bg-slate-800 border border-slate-700' : 'bg-white border border-slate-200 shadow-xl shadow-slate-200/50'}`}>
@@ -199,8 +228,15 @@ const Login = () => {
             {currentState === 'Login' ? 'Welcome Back' : 'Create Account'}
           </h2>
           <p className={isDarkMode ? 'text-slate-400' : 'text-slate-600'}>
-            {currentState === 'Login' ? 'Sign in to continue shopping' : 'Join us for exclusive deals'}
+            {currentState === 'Login'
+              ? 'Sign in to continue shopping'
+              : 'Join us for exclusive deals'}
           </p>
+          {currentState === 'Login' && (
+            <p className={`mt-2 text-xs ${isDarkMode ? 'text-slate-500' : 'text-slate-500'}`}>
+              Admin credentials will automatically open the admin dashboard.
+            </p>
+          )}
         </div>
 
         {/* Auth Method Tabs */}

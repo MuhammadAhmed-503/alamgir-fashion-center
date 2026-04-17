@@ -24,6 +24,8 @@ const AuthCallback = () => {
         // Store token
         setToken(token);
         localStorage.setItem('token', token);
+        localStorage.removeItem('adminToken');
+        localStorage.setItem('authRole', 'user');
 
         // Sync any local cart items to server
         try {

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { backendUrl, currency } from '../config'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
-import { useTheme } from '../context/ThemeContext'
+import { useTheme } from '../../context/ThemeContext'
 
 const List = ({token}) => {
   const { isDarkMode } = useTheme()
@@ -49,7 +49,7 @@ const List = ({token}) => {
   }
 
   const editProduct = (id) => {
-    navigate(`/add?edit=${id}`)
+    navigate(`/admin/add?edit=${id}`)
   }
 
   useEffect(() => {

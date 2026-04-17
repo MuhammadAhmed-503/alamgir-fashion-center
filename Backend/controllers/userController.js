@@ -3,6 +3,7 @@ import userModel from "../models/userModel.js";
 import validator from "validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { v2 as cloudinary } from "cloudinary";
 
 const createToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET);
@@ -94,7 +95,7 @@ const adminLogin = async (req, res) => {
 // route to get user profile
 const getUserProfile = async (req, res) => {
     try {
-        const { userId } = req.body;
+        const userId = req.userId || req.body?.userId;
         const user = await userModel.findById(userId).select('-password');
         
         if (!user) {
@@ -111,7 +112,8 @@ const getUserProfile = async (req, res) => {
 // route to update user profile
 const updateUserProfile = async (req, res) => {
     try {
-        const { userId, name, phone } = req.body;
+        const userId = req.userId || req.body?.userId;
+        const { name, phone } = req.body;
 
         const user = await userModel.findById(userId);
         
@@ -131,4 +133,38 @@ const updateUserProfile = async (req, res) => {
     }
 };
 
-export { loginUser, registerUser, adminLogin, getUserProfile, updateUserProfile };
+// route to update user avatar
+const updateUserAvatar = async (req, res) => {
+    try {
+        const userId = req.userId || req.body?.userId;
+        const file = req.file;
+
+        if (!file) {
+            return res.json({ success: false, message: "Avatar image is required" });
+        }
+
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.json({ success: false, message: "User not found" });
+        }
+
+        const uploadResult = await cloudinary.uploader.upload(file.path, {
+            resource_type: "image",
+            folder: "afc/users/avatar",
+        });
+
+        user.avatar = uploadResult.secure_url;
+        await user.save();
+
+        res.json({
+            success: true,
+            message: "Profile photo updated successfully",
+            avatar: user.avatar,
+        });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+};
+
+export { loginUser, registerUser, adminLogin, getUserProfile, updateUserProfile, updateUserAvatar };

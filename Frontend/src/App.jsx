@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Home from './Pages/Home'
 import Collection from './Pages/Collection'
 import About from './Pages/About'
@@ -17,10 +18,46 @@ import SearchBar from './components/SearchBar'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useTheme } from './context/ThemeContext'
+import { ShopContext } from './context/ShopContext'
+import AdminLayout from './admin/AdminLayout'
 
 
 const App = () => {
   const { isDarkMode } = useTheme();
+  const { logoUrl } = useContext(ShopContext);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [adminToken, setAdminToken] = useState(localStorage.getItem('adminToken') || '');
+
+  useEffect(() => {
+    localStorage.setItem('adminToken', adminToken);
+  }, [adminToken]);
+
+  const handleAdminLogout = () => {
+    setAdminToken('');
+    localStorage.removeItem('adminToken');
+    localStorage.removeItem('authRole');
+    navigate('/login');
+  };
+
+  const isAdminArea = location.pathname.startsWith('/admin');
+
+  if (isAdminArea) {
+    return (
+      <>
+        <ToastContainer
+          theme={isDarkMode ? 'dark' : 'light'}
+          position='top-right'
+          autoClose={3000}
+        />
+        <AdminLayout
+          adminToken={adminToken}
+          onLogout={handleAdminLogout}
+          logoUrl={logoUrl}
+        />
+      </>
+    );
+  }
   
   return (
     <div className={`min-h-screen transition-colors duration-300 overflow-x-hidden ${isDarkMode ? 'bg-slate-900' : 'bg-white'}`}>

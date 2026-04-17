@@ -1,5 +1,6 @@
-import { useTheme } from '../context/ThemeContext'
-import { assets } from '../assets/assets'
+import React from 'react'
+import { useTheme } from '../../context/ThemeContext'
+import { assets } from '../../assets/assets'
 
 // Theme Toggle Icons
 const SunIcon = () => (
@@ -20,7 +21,7 @@ const MenuIcon = () => (
   </svg>
 );
 
-const NavBar = ({ setToken, onMenuClick, logoUrl }) => {
+const NavBar = ({ onLogout, onMenuClick, logoUrl }) => {
   const { isDarkMode, toggleTheme } = useTheme();
 
   return (
@@ -59,7 +60,7 @@ const NavBar = ({ setToken, onMenuClick, logoUrl }) => {
 
         {/* Logout Button */}
         <button 
-          onClick={()=>setToken('')} 
+          onClick={onLogout}
           className='bg-gradient-to-r from-indigo-500 to-teal-600 hover:from-indigo-600 hover:to-teal-700 text-white px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300 shadow-lg shadow-indigo-500/25'
         >
           Logout

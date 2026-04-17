@@ -1,9 +1,11 @@
 import productModel from "../models/productModel.js";
+import userModel from "../models/userModel.js";
 
 // Add a review to a product
 const addReview = async (req, res) => {
     try {
-        const { productId, rating, comment, userId, userName } = req.body;
+        const { productId, rating, comment } = req.body;
+        const userId = req.userId || req.body?.userId;
 
         if (!rating || !comment) {
             return res.json({ success: false, message: "Rating and comment are required" });
@@ -19,6 +21,9 @@ const addReview = async (req, res) => {
             return res.json({ success: false, message: "Product not found" });
         }
 
+        const user = await userModel.findById(userId).select('name');
+        const resolvedUserName = user?.name || req.body?.userName || 'Anonymous User';
+
         // Check if user already reviewed this product
         const existingReview = product.reviews.find(
             review => review.user.toString() === userId
@@ -33,7 +38,7 @@ const addReview = async (req, res) => {
             // Add new review
             product.reviews.push({
                 user: userId,
-                userName: userName,
+                userName: resolvedUserName,
                 rating: rating,
                 comment: comment
             });
