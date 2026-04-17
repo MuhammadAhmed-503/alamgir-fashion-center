@@ -85,7 +85,7 @@ const Hero = () => {
               </div>
               <div>
                 <p className={`font-semibold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Free Shipping</p>
-                <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>On orders over $50</p>
+                <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>On orders over PKR 9999</p>
               </div>
             </div>
           </div>
